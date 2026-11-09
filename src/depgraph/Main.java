@@ -30,7 +30,12 @@ public final class Main {
         if (config.stage().equals("2")) {
             repository.dependencies(config.root()).forEach(System.out::println);
         } else {
-            System.out.print(Graph.build(config.root(), repository).adjacency());
+            Graph graph = Graph.build(config.root(), repository);
+            if (config.stage().equals("4")) {
+                InstallOrder.of(graph).forEach(System.out::println);
+            } else {
+                System.out.print(graph.adjacency());
+            }
         }
     }
 }
