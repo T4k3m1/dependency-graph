@@ -6,12 +6,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Ensures development-stage output does not leak into normal final output. */
 public final class CliTests {
-    /** Prevents utility construction. */
+
     private CliTests() { }
 
-    /** Verifies key-value, direct dependencies, BFS and installation-order modes. */
     public static void run() throws Exception {
         String settings = capture("1");
         assert settings.contains("package=A\n") && settings.contains("version=1\n");
@@ -21,7 +19,6 @@ public final class CliTests {
         assert capture("4").replace("\r", "").equals("D\nB\nC\nA\n");
     }
 
-    /** Captures output for a fixture stage and always restores System.out. */
     private static String capture(String stage) throws Exception {
         List<String> arguments = new ArrayList<>(List.of(ConfigTests.valid()));
         arguments.addAll(List.of("--stage", stage));

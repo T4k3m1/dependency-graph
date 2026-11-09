@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-/** Environment-marker evaluator for the documented CPython 3.12 Windows target. */
 public final class Markers {
     public static final String PYTHON_VERSION = "3.12.14";
     private static final Map<String, String> ENVIRONMENT = Map.of(
@@ -32,7 +31,6 @@ public final class Markers {
         }
     }
 
-    /** Returns whether the dependency applies to the fixed reference environment. */
     public static boolean applies(String expression) {
         if (expression.isBlank()) {
             return true;
@@ -45,7 +43,6 @@ public final class Markers {
         return result;
     }
 
-    /** Parses disjunctions while consuming both operands even on a true left side. */
     private boolean or() {
         boolean result = and();
         while (take("or")) {
@@ -55,7 +52,6 @@ public final class Markers {
         return result;
     }
 
-    /** Parses conjunctions with higher precedence than disjunctions. */
     private boolean and() {
         boolean result = atom();
         while (take("and")) {
@@ -65,7 +61,6 @@ public final class Markers {
         return result;
     }
 
-    /** Parses parentheses or a scalar comparison. */
     private boolean atom() {
         if (take("(")) {
             boolean result = or();
@@ -85,7 +80,6 @@ public final class Markers {
         return evaluate(left, operator, scalar(next()));
     }
 
-    /** Evaluates version comparisons numerically and textual comparisons lexically. */
     private static boolean evaluate(String left, String operator, String right) {
         if (operator.equals("in") || operator.equals("not in")) {
             return operator.equals("in") == right.contains(left);
@@ -96,7 +90,6 @@ public final class Markers {
         return textual(left.compareTo(right), operator);
     }
 
-    /** Evaluates a lexical comparison when operands are not both numeric versions. */
     private static boolean textual(int order, String operator) {
         return switch (operator) {
             case "==", "===" -> order == 0;
@@ -109,7 +102,6 @@ public final class Markers {
         };
     }
 
-    /** Resolves an environment variable or removes literal quotes. */
     private static String scalar(String token) {
         if (token.startsWith("'") || token.startsWith("\"")) {
             return token.substring(1, token.length() - 1);
@@ -120,7 +112,6 @@ public final class Markers {
         return ENVIRONMENT.get(token);
     }
 
-    /** Consumes one optional token. */
     private boolean take(String token) {
         if (position < tokens.size() && tokens.get(position).equals(token)) {
             position++;
@@ -129,7 +120,6 @@ public final class Markers {
         return false;
     }
 
-    /** Requires another token. */
     private String next() {
         if (position == tokens.size()) {
             throw new IllegalArgumentException("Unexpected end of marker");

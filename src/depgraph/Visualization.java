@@ -8,15 +8,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-/** D2 source generation and SVG export through the official D2 executable. */
 public final class Visualization {
     private static final long TIMEOUT_SECONDS = 60;
     private static final int SUCCESS_EXIT = 0;
 
-    /** Prevents utility construction. */
     private Visualization() { }
 
-    /** Includes every reachable vertex and edge, preserving cycles and isolated nodes. */
     public static String d2(Graph graph) {
         StringBuilder result = new StringBuilder("direction: right\n");
         Map<String, String> aliases = new LinkedHashMap<>();
@@ -30,7 +27,6 @@ public final class Visualization {
         return result.toString();
     }
 
-    /** Saves D2 alongside a requested SVG, replacing the SVG only after successful rendering. */
     public static void save(Graph graph, Path output) throws Exception {
         Files.createDirectories(output.getParent());
         String fileName = output.getFileName().toString();
@@ -51,7 +47,6 @@ public final class Visualization {
         }
     }
 
-    /** Invokes only the renderer; dependency extraction never calls an external tool. */
     private static void render(Path source, Path output, Path log) throws Exception {
         String executable = System.getenv().getOrDefault("D2_BIN", "d2");
         Process process;

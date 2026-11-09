@@ -7,11 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/** Directed dependency graph whose insertion order is recursive BFS order. */
 public record Graph(Map<String, List<String>> edges) {
     private static final int MAX_LEVELS = 512;
 
-    /** Starts BFS, marking vertices when discovered to handle shared and cyclic edges. */
     public static Graph build(String root, Repository repository) throws Exception {
         Map<String, List<String>> edges = new LinkedHashMap<>();
         Set<String> discovered = new LinkedHashSet<>();
@@ -20,7 +18,6 @@ public record Graph(Map<String, List<String>> edges) {
         return new Graph(edges);
     }
 
-    /** Recursively processes one complete BFS layer before the next layer. */
     private static void level(List<String> frontier, Repository repository,
                               Map<String, List<String>> edges, Set<String> discovered,
                               int depth) throws Exception {
@@ -42,7 +39,6 @@ public record Graph(Map<String, List<String>> edges) {
         }
     }
 
-    /** Prints the stage-three adjacency list in BFS order. */
     public String adjacency() {
         StringBuilder result = new StringBuilder();
         edges.forEach((name, children) -> {

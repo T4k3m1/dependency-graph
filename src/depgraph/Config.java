@@ -7,14 +7,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-/** Five required CLI settings plus the demonstration stage selector. */
 public record Config(String name, String repository, boolean testMode, String version,
                      Path output, String stage) {
     private static final int PAIR_SIZE = 2;
     private static final Set<String> REQUIRED = Set.of(
             "--package", "--repository", "--test-mode", "--version", "--output");
 
-    /** Parses pairs of option names and values, rejecting unknown or repeated keys. */
     public static Config parse(String[] arguments) {
         Map<String, String> values = new LinkedHashMap<>();
         if (arguments.length % PAIR_SIZE != 0) {
@@ -36,7 +34,6 @@ public record Config(String name, String repository, boolean testMode, String ve
         return validated(values);
     }
 
-    /** Validates every setting before any HTTP request or output creation. */
     private static Config validated(Map<String, String> values) {
         String mode = values.get("--test-mode");
         if (!Set.of("true", "false").contains(mode)) {
@@ -60,7 +57,6 @@ public record Config(String name, String repository, boolean testMode, String ve
                 version, output(values.get("--output")), stage);
     }
 
-    /** Checks a readable fixture path or a PyPI-compatible JSON API base URL. */
     private static String repository(String value, boolean test) {
         if (test) {
             if (!Files.isRegularFile(Path.of(value)) || !Files.isReadable(Path.of(value))) {
@@ -77,7 +73,6 @@ public record Config(String name, String repository, boolean testMode, String ve
         return value.replaceAll("/+$", "");
     }
 
-    /** Checks the SVG extension, target type and nearest existing writable parent. */
     private static Path output(String value) {
         Path path = Path.of(value).toAbsolutePath().normalize();
         if (!value.toLowerCase(java.util.Locale.ROOT).endsWith(".svg") || Files.isDirectory(path)) {
@@ -99,13 +94,11 @@ public record Config(String name, String repository, boolean testMode, String ve
         return path;
     }
 
-    /** Shows the five user-configurable parameters for stage one only. */
     public String settings() {
         return "package=" + name + "\nrepository=" + repository + "\ntest_mode=" + testMode
                 + "\nversion=" + version + "\noutput=" + output + "\n";
     }
 
-    /** Converts the selected package to a fixture name or fixed-version PyPI identity. */
     public String root() {
         return testMode ? name : Requirement.normalize(name) + "==" + version;
     }

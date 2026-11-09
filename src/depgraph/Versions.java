@@ -4,22 +4,18 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-/** Explicit stable-numeric subset of PEP 440 version comparisons. */
 public final class Versions {
     private static final Pattern CONDITION = Pattern.compile(
             "(===|~=|==|!=|<=|>=|<|>)([0-9]+(?:\\.[0-9]+)*(?:\\.\\*)?)");
     private static final int MIN_COMPATIBLE_PARTS = 2;
     private static final int COMPATIBLE_OFFSET = 2;
 
-    /** Prevents utility construction. */
     private Versions() { }
 
-    /** Checks whether a version belongs to the supported stable release subset. */
     public static boolean stable(String version) {
         return version.matches("[0-9]+(?:\\.[0-9]+)*");
     }
 
-    /** Compares release segments numerically with trailing zero normalization. */
     public static int compare(String left, String right) {
         if (!stable(left) || !stable(right)) {
             throw new IllegalArgumentException("Unsupported nonnumeric version: " + left + " / " + right);
@@ -37,7 +33,6 @@ public final class Versions {
         return 0;
     }
 
-    /** Applies comma-separated constraints, accepting legacy enclosing parentheses. */
     public static boolean matches(String version, String expression) {
         String cleaned = expression.replace("(", "").replace(")", "").replaceAll("\\s+", "");
         if (cleaned.isEmpty()) {
@@ -51,7 +46,6 @@ public final class Versions {
         return true;
     }
 
-    /** Evaluates one constraint without silently accepting unsupported syntax. */
     private static boolean condition(String version, String expression) {
         var matcher = CONDITION.matcher(expression);
         if (!matcher.matches()) {
@@ -65,7 +59,6 @@ public final class Versions {
         return bounded(version, operator, bound);
     }
 
-    /** Evaluates an ordinary or compatible-release numeric bound. */
     private static boolean bounded(String version, String operator, String bound) {
         int order = compare(version, bound);
         return switch (operator) {
@@ -80,7 +73,6 @@ public final class Versions {
         };
     }
 
-    /** Applies the prefix matching of ==X.* and !=X.*. */
     private static boolean wildcard(String version, String operator, String prefix) {
         boolean equal = version.equals(prefix) || version.startsWith(prefix + ".");
         return switch (operator) {

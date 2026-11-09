@@ -6,15 +6,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Recursive breadth-first traversal tests. */
 public final class GraphTests {
     private static final int WIDE_SIZE = 4000;
     private static final int OVER_DEPTH = 600;
 
-    /** Prevents utility construction. */
     private GraphTests() { }
 
-    /** Tests breadth order, cycles, self-loops, isolated vertices and errors. */
     public static void run() throws Exception {
         TestRepository repository = new TestRepository(Path.of("examples/repository.csv"));
         Graph graph = Graph.build("A", repository);
@@ -29,7 +26,6 @@ public final class GraphTests {
         TestSupport.fails(() -> Graph.build("1", chain), "depth");
     }
 
-    /** Shows that recursion depth counts layers, not the number of vertices. */
     private static void testWide() throws Exception {
         Map<String, List<String>> data = new LinkedHashMap<>();
         List<String> children = new ArrayList<>();

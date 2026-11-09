@@ -12,7 +12,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Direct PyPI JSON API client with a deliberate stable-release resolver subset. */
 public final class PypiRepository implements Repository {
     private static final int HTTP_OK = 200;
     private static final int ID_PARTS = 2;
@@ -23,13 +22,11 @@ public final class PypiRepository implements Repository {
     private final Map<String, Map<?, ?>> cache = new HashMap<>();
     private final Map<String, String> selected = new LinkedHashMap<>();
 
-    /** Pins the root to the exact user-specified version. */
     public PypiRepository(String base, String root, String version) {
         this.base = base;
         selected.put(Requirement.normalize(root), version);
     }
 
-    /** Fetches version-specific Requires-Dist metadata and resolves direct edges. */
     @Override
     public List<String> dependencies(String identity) throws Exception {
         String[] parts = identity.split("==", -1);
@@ -54,7 +51,6 @@ public final class PypiRepository implements Repository {
         return result.stream().distinct().toList();
     }
 
-    /** Selects the newest compatible non-yanked stable release, checking prior selections. */
     private String resolve(Requirement requirement) throws Exception {
         String name = requirement.name();
         if (selected.containsKey(name)) {
@@ -77,7 +73,6 @@ public final class PypiRepository implements Repository {
         throw new IllegalArgumentException("No supported release for " + name + requirement.constraint());
     }
 
-    /** Checks for at least one non-yanked file compatible with reference Python. */
     private boolean available(Object release) {
         for (Object file : Json.array(release)) {
             Map<?, ?> metadata = Json.object(file);
@@ -88,12 +83,10 @@ public final class PypiRepository implements Repository {
         return false;
     }
 
-    /** Tests Requires-Python without invoking Python or packaging libraries. */
     private boolean pythonCompatible(Object constraint) {
         return constraint == null || Versions.matches(Markers.PYTHON_VERSION, constraint.toString());
     }
 
-    /** Downloads and caches one JSON document, preserving explicit HTTP errors. */
     private Map<?, ?> fetch(String path) throws Exception {
         if (!cache.containsKey(path)) {
             URI uri = URI.create(base + path);

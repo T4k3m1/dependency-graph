@@ -3,12 +3,10 @@ package depgraph;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Reads two-column CSV records with quoted fields. */
 public final class Csv {
-    /** Prevents utility construction. */
+
     private Csv() { }
 
-    /** Splits a record, accepting doubled quotes inside quoted fields. */
     public static List<String> parse(String line) {
         List<String> fields = new ArrayList<>();
         StringBuilder field = new StringBuilder();

@@ -5,12 +5,10 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
-/** D2 golden outputs and optional real-renderer integration checks. */
 public final class VisualizationTests {
-    /** Prevents utility construction. */
+
     private VisualizationTests() { }
 
-    /** Checks isolated vertices, edge direction, shared descendants and cycles. */
     public static void run() throws Exception {
         Graph leaf = new Graph(Map.of("I", List.of()));
         assert Visualization.d2(leaf).equals("direction: right\nnode0: \"I\"\n");
@@ -24,7 +22,6 @@ public final class VisualizationTests {
         assert cycle.contains("node0 -> node1\n") && cycle.contains("node1 -> node0\n");
     }
 
-    /** Exports actual SVGs for a cycle and isolated node using the installed D2 executable. */
     public static void integration() throws Exception {
         TestRepository repository = new TestRepository(Path.of("examples/repository.csv"));
         Path folder = Path.of("build", "svg tests with spaces").toAbsolutePath();

@@ -2,12 +2,9 @@ package depgraph;
 
 import java.util.List;
 
-/** Dependency-free Java assertion test runner. */
 public final class AllTests {
-    /** Prevents utility construction. */
     private AllTests() { }
 
-    /** Runs all available test groups with assertions enabled by the launcher. */
     public static void main(String[] arguments) throws Exception {
         Config config = Config.parse(new String[] {"--package", "requests", "--version", "2.32.3",
                 "--repository", "https://pypi.org", "--test-mode", "false", "--output", "generated/test.svg"});

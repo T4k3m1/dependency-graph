@@ -6,12 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
-/** Stable dependency-first topological ordering of the reachable graph. */
 public final class InstallOrder {
-    /** Prevents utility construction. */
+
     private InstallOrder() { }
 
-    /** Uses Kahn's algorithm with leaves first and alphabetical tie breaking. */
     public static List<String> of(Graph graph) {
         Map<String, Integer> remaining = new LinkedHashMap<>();
         Map<String, List<String>> parents = new LinkedHashMap<>();

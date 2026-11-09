@@ -5,7 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Small strict JSON reader implemented without third-party libraries. */
 public final class Json {
     private static final int HEX_LENGTH = 4;
     private static final int HEX_RADIX = 16;
@@ -17,12 +16,10 @@ public final class Json {
     private int position;
     private int depth;
 
-    /** Stores the source document. */
     private Json(String input) {
         this.input = input;
     }
 
-    /** Parses exactly one JSON value and rejects trailing data. */
     public static Object parse(String input) {
         Json parser = new Json(input);
         Object value = parser.value();
@@ -33,7 +30,6 @@ public final class Json {
         return value;
     }
 
-    /** Reads a value with a bounded nesting depth. */
     private Object value() {
         space();
         if (++depth > MAX_DEPTH || position == input.length()) {
@@ -52,7 +48,6 @@ public final class Json {
         return result;
     }
 
-    /** Reads unique string keys and their values. */
     private Map<String, Object> objectValue() {
         expect('{');
         Map<String, Object> result = new LinkedHashMap<>();
@@ -72,7 +67,6 @@ public final class Json {
         return result;
     }
 
-    /** Reads an array, preserving element order. */
     private List<Object> arrayValue() {
         expect('[');
         List<Object> result = new ArrayList<>();
@@ -86,7 +80,6 @@ public final class Json {
         return result;
     }
 
-    /** Reads JSON string escapes and rejects unterminated strings. */
     private String string() {
         expect('"');
         StringBuilder result = new StringBuilder();
@@ -103,7 +96,6 @@ public final class Json {
         throw new IllegalArgumentException("Unclosed JSON string");
     }
 
-    /** Decodes a single escaped character. */
     private char escape() {
         char symbol = escapedSymbol();
         if (symbol == 'u') {
@@ -116,7 +108,6 @@ public final class Json {
         return decoded;
     }
 
-    /** Requires the character following a backslash. */
     private char escapedSymbol() {
         if (position == input.length()) {
             throw new IllegalArgumentException("Incomplete JSON escape");
@@ -124,7 +115,6 @@ public final class Json {
         return input.charAt(position++);
     }
 
-    /** Decodes four hexadecimal digits. */
     private char unicode() {
         if (position + HEX_LENGTH > input.length()) {
             throw new IllegalArgumentException("Incomplete unicode escape");
@@ -134,7 +124,6 @@ public final class Json {
         return (char) Integer.parseInt(digits, HEX_RADIX);
     }
 
-    /** Parses JSON numbers as BigDecimal, rejecting non-JSON spellings. */
     private Object number() {
         var matcher = java.util.regex.Pattern.compile("-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?")
                 .matcher(input.substring(position));
@@ -145,7 +134,6 @@ public final class Json {
         return new java.math.BigDecimal(matcher.group());
     }
 
-    /** Reads a fixed JSON literal. */
     private Object literal(String spelling, Object value) {
         if (!input.startsWith(spelling, position)) {
             throw new IllegalArgumentException("Invalid JSON literal");
@@ -154,14 +142,12 @@ public final class Json {
         return value;
     }
 
-    /** Skips JSON whitespace. */
     private void space() {
         while (position < input.length() && " \r\n\t".indexOf(input.charAt(position)) >= 0) {
             position++;
         }
     }
 
-    /** Consumes an optional punctuation character. */
     private boolean take(char symbol) {
         space();
         if (position < input.length() && input.charAt(position) == symbol) {
@@ -171,14 +157,12 @@ public final class Json {
         return false;
     }
 
-    /** Requires a punctuation character. */
     private void expect(char symbol) {
         if (!take(symbol)) {
             throw new IllegalArgumentException("JSON expected " + symbol + " at " + position);
         }
     }
 
-    /** Requires an object and exposes its keys without unsafe generic casts. */
     public static Map<?, ?> object(Object value) {
         if (!(value instanceof Map<?, ?> object)) {
             throw new IllegalArgumentException("Expected JSON object");
@@ -186,7 +170,6 @@ public final class Json {
         return object;
     }
 
-    /** Requires an array, treating a null requires_dist value as an empty list. */
     public static List<?> array(Object value) {
         if (value == null) {
             return List.of();

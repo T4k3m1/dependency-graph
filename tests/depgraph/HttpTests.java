@@ -6,16 +6,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
-/** Offline PyPI HTTP integration tests on an automatically selected localhost port. */
 public final class HttpTests {
     private static final int AUTO_PORT = 0;
     private static final int OK = 200;
     private static final int NOT_FOUND = 404;
 
-    /** Prevents utility construction. */
+
     private HttpTests() { }
 
-    /** Tests exact root versions, release filtering, marker exclusion and HTTP errors. */
     public static void run() throws Exception {
         Map<String, String> fixtures = fixtures();
         HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", AUTO_PORT), AUTO_PORT);
@@ -42,7 +40,6 @@ public final class HttpTests {
         }
     }
 
-    /** Defines candidate versions including yanked and Python-incompatible releases. */
     private static Map<String, String> fixtures() {
         String demo = "{\"info\":{\"version\":\"1\",\"requires_python\":\">=3.12\","
                 + "\"requires_dist\":[\"Leaf>=1,<3\",\"optional; extra == 'feature'\"]}}";
