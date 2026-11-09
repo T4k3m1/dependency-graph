@@ -45,8 +45,13 @@ public record Graph(Map<String, List<String>> edges) {
     /** Prints the stage-three adjacency list in BFS order. */
     public String adjacency() {
         StringBuilder result = new StringBuilder();
-        edges.forEach((name, children) -> result.append(name).append(" -> ")
-                .append(String.join(" ", children)).append('\n'));
+        edges.forEach((name, children) -> {
+            result.append(name).append(" ->");
+            if (!children.isEmpty()) {
+                result.append(' ').append(String.join(" ", children));
+            }
+            result.append('\n');
+        });
         return result.toString();
     }
 }

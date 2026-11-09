@@ -1,5 +1,7 @@
 package depgraph;
 
+import java.util.List;
+
 /** Dependency-free Java assertion test runner. */
 public final class AllTests {
     /** Prevents utility construction. */
@@ -17,6 +19,12 @@ public final class AllTests {
         HttpTests.run();
         GraphTests.run();
         OrderTests.run();
-        System.out.println("PASS: CLI/errors, metadata, local HTTP, recursive BFS, dependency-first order");
+        VisualizationTests.run();
+        CliTests.run();
+        if (List.of(arguments).contains("--svg")) {
+            VisualizationTests.integration();
+            System.out.println("PASS: SVG integration with D2");
+        }
+        System.out.println("PASS: CLI/errors, metadata, HTTP, recursive BFS, order, D2 source and CLI stages");
     }
 }

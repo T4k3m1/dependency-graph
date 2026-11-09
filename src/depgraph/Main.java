@@ -33,8 +33,11 @@ public final class Main {
             Graph graph = Graph.build(config.root(), repository);
             if (config.stage().equals("4")) {
                 InstallOrder.of(graph).forEach(System.out::println);
-            } else {
+            } else if (config.stage().equals("3")) {
                 System.out.print(graph.adjacency());
+            } else {
+                Visualization.save(graph, config.output());
+                System.out.print(Visualization.d2(graph));
             }
         }
     }

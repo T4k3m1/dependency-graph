@@ -1,0 +1,8 @@
+direction: right
+node0: "rich==13.9.4"
+node1: "pygments==2.21.0"
+node2: "markdown-it-py==4.2.0"
+node3: "mdurl==0.1.2"
+node0 -> node1
+node0 -> node2
+node2 -> node3

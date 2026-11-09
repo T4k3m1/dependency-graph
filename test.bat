@@ -9,5 +9,5 @@ if not exist build mkdir build
 (for %%f in (tests\depgraph\*.java) do @echo tests/depgraph/%%~nxf) >> build\tests.txt
 javac --release 17 -encoding UTF-8 -d build @build\tests.txt
 if errorlevel 1 exit /b 1
-java -ea -cp build depgraph.AllTests
+java -ea -cp build depgraph.AllTests %*
 exit /b %errorlevel%
