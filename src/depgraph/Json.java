@@ -10,6 +10,9 @@ public final class Json {
     private static final int HEX_LENGTH = 4;
     private static final int HEX_RADIX = 16;
     private static final int MAX_DEPTH = 128;
+    private static final Map<Character, Character> ESCAPES = Map.of(
+            '"', '"', '\\', '\\', '/', '/', 'b', '\b',
+            'f', '\f', 'n', '\n', 'r', '\r', 't', '\t');
     private final String input;
     private int position;
     private int depth;
@@ -102,18 +105,15 @@ public final class Json {
 
     /** Decodes a single escaped character. */
     private char escape() {
-        return switch (escapedSymbol()) {
-            case '"' -> '"';
-            case '\\' -> '\\';
-            case '/' -> '/';
-            case 'b' -> '\b';
-            case 'f' -> '\f';
-            case 'n' -> '\n';
-            case 'r' -> '\r';
-            case 't' -> '\t';
-            case 'u' -> unicode();
-            default -> throw new IllegalArgumentException("Invalid JSON escape");
-        };
+        char symbol = escapedSymbol();
+        if (symbol == 'u') {
+            return unicode();
+        }
+        Character decoded = ESCAPES.get(symbol);
+        if (decoded == null) {
+            throw new IllegalArgumentException("Invalid JSON escape");
+        }
+        return decoded;
     }
 
     /** Requires the character following a backslash. */
