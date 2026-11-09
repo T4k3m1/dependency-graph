@@ -13,6 +13,7 @@ public final class AllTests {
         assert config.stage().equals("5");
         assert config.settings().contains("version=2.32.3\n");
         MetadataTests.run();
-        System.out.println("PASS: CLI, JSON, versions and markers");
+        GraphTests.run();
+        System.out.println("PASS: CLI, metadata, recursive BFS");
     }
 }

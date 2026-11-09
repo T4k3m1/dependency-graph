@@ -104,4 +104,9 @@ public record Config(String name, String repository, boolean testMode, String ve
         return "package=" + name + "\nrepository=" + repository + "\ntest_mode=" + testMode
                 + "\nversion=" + version + "\noutput=" + output + "\n";
     }
+
+    /** Converts the selected package to a fixture name or fixed-version PyPI identity. */
+    public String root() {
+        return testMode ? name : Requirement.normalize(name) + "==" + version;
+    }
 }

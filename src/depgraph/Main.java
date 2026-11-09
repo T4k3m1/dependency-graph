@@ -24,11 +24,13 @@ public final class Main {
             System.out.print(config.settings());
             return;
         }
-        if (config.testMode()) {
-            throw new IllegalArgumentException("Stage 2 requires a PyPI repository");
+        Repository repository = config.testMode()
+                ? new TestRepository(java.nio.file.Path.of(config.repository()))
+                : new PypiRepository(config.repository(), config.name(), config.version());
+        if (config.stage().equals("2")) {
+            repository.dependencies(config.root()).forEach(System.out::println);
+        } else {
+            System.out.print(Graph.build(config.root(), repository).adjacency());
         }
-        Repository repository = new PypiRepository(config.repository(), config.name(), config.version());
-        String root = Requirement.normalize(config.name()) + "==" + config.version();
-        repository.dependencies(root).forEach(System.out::println);
     }
 }
