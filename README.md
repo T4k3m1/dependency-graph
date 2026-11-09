@@ -23,3 +23,13 @@ run.bat --package requests --repository https://pypi.org --test-mode false --ver
 Config.parse читает параметры, Config.settings выводит их,
 Main.execute запускает приложение, Main.main обрабатывает ошибки.
 Назначение каждого метода описано в Javadoc.
+
+## Этап 2
+
+Добавьте --stage 2 для вывода прямых зависимостей указанной версии.
+PypiRepository сам обращается к /pypi/name/version/json, читает Requires-Dist
+своим JSON-парсером и подбирает стабильные числовые версии из releases.
+Versions проверяет ограничения, Markers вычисляет условия среды.
+Эталонная среда анализа: CPython 3.12.14, Windows AMD64, без extras.
+Это фиксированная модель, а не установленный на компьютере Python.
+Установка Python для запуска Java-программы не нужна.

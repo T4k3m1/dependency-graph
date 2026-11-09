@@ -19,6 +19,16 @@ public final class Main {
 
     /** Validates CLI parameters and prints stage-one key-value output. */
     public static void execute(String[] arguments) throws Exception {
-        System.out.print(Config.parse(arguments).settings());
+        Config config = Config.parse(arguments);
+        if (config.stage().equals("1")) {
+            System.out.print(config.settings());
+            return;
+        }
+        if (config.testMode()) {
+            throw new IllegalArgumentException("Stage 2 requires a PyPI repository");
+        }
+        Repository repository = new PypiRepository(config.repository(), config.name(), config.version());
+        String root = Requirement.normalize(config.name()) + "==" + config.version();
+        repository.dependencies(root).forEach(System.out::println);
     }
 }

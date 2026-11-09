@@ -12,6 +12,7 @@ public final class AllTests {
         assert config.name().equals("requests");
         assert config.stage().equals("5");
         assert config.settings().contains("version=2.32.3\n");
-        System.out.println("PASS: CLI configuration");
+        MetadataTests.run();
+        System.out.println("PASS: CLI, JSON, versions and markers");
     }
 }
